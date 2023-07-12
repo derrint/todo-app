@@ -1,9 +1,9 @@
-import { GET_TODOS, TODO_ERROR } from "@/store/types";
+import { GET_TODOS, TODO_ERROR } from '@/store/types'
 
 const initialState = {
   todos: [],
-  loading: true,
-};
+  loading: true
+}
 
 const todoReducer = (state = initialState, action: any) => {
   switch (action.type) {
@@ -11,15 +11,15 @@ const todoReducer = (state = initialState, action: any) => {
       return {
         ...state,
         todos: action.payload.todos,
-        loading: false,
-      };
+        loading: false
+      }
     case TODO_ERROR:
       return {
         loading: false,
-        error: action.payload,
-      };
+        error: action.payload
+      }
     default:
-      return state;
+      return state
   }
 }
 
