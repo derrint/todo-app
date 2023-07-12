@@ -3,6 +3,8 @@
   "eslint.debug": true,
   "eslint.format.enable": true,
   "eslint.lintTask.enable": true,
+  "eslint.validate": ["javascript", "typescript", "javascriptreact", "typescriptreact"],
+  "editor.defaultFormatter":"esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
