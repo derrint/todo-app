@@ -30,8 +30,10 @@ export default function Home() {
       userId: 1
     }
 
-    dispatch(addTodo(JSON.stringify(newTodoData)))
-    setNewTodo('')
+    if (newTodo) {
+      dispatch(addTodo(JSON.stringify(newTodoData)))
+      setNewTodo('')
+    }
   }
 
   const [newTodo, setNewTodo] = useState('')
