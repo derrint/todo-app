@@ -11,11 +11,11 @@ const todoService = {
 
   add(data: any) {
     return http.post('/todos/add', data)
-  }
+  },
 
-  // update(id, data) {
-  //   return http.put(`/tutorials/${id}`, data)
-  // }
+  update(id: number, data: any) {
+    return http.put(`/todos/${id}`, data)
+  }
 
   // delete(id) {
   //   return http.delete(`/tutorials/${id}`)

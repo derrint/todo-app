@@ -4,14 +4,8 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FiCheck, FiCheckCircle, FiPlus, FiTrash2 } from 'react-icons/fi'
 
-import { addTodo, getTodos } from '@/store/actions/todos'
-
-interface ITodo {
-  completed: boolean
-  id: number
-  todo: string
-  userId: number
-}
+import { addTodo, getTodos, updateTodo } from '@/store/actions/todos'
+import { ITodo } from '@/interfaces/todo'
 
 export default function Home() {
   const dispatch = useDispatch()
@@ -41,14 +35,23 @@ export default function Home() {
   }
 
   const [newTodo, setNewTodo] = useState('')
-  const handleOnChange = (event: any) => {
+  const handleOnChangeNewTodo = (event: any) => {
     setNewTodo(event.target.value)
   }
 
-  const handleKeyDown = (event: any) => {
+  const handleKeyDownNewTodo = (event: any) => {
     if (event.key === 'Enter') {
       onAddTodo(event.target.value)
     }
+  }
+
+  // ----- handle update todo -----
+
+  const handleCompleteTodo = (id: number) => {
+    const data = {
+      completed: true
+    }
+    dispatch(updateTodo(id, data))
   }
 
   return (
@@ -99,8 +102,8 @@ export default function Home() {
                 <input
                   type="text"
                   value={newTodo}
-                  onChange={handleOnChange}
-                  onKeyDown={handleKeyDown}
+                  onChange={handleOnChangeNewTodo}
+                  onKeyDown={handleKeyDownNewTodo}
                   className="outline-none w-full border-slate-200"
                   placeholder="Add item here..."
                 />
@@ -128,7 +131,12 @@ export default function Home() {
                         <FiCheck size={20} />
                       </div>
                     ) : (
-                      <button className="w-6 h-6 text-slate-500 hover:text-indigo-600 hover:cursor-pointer">
+                      <button
+                        className="w-6 h-6 text-slate-500 hover:text-indigo-600 hover:cursor-pointer"
+                        onClick={() => {
+                          handleCompleteTodo(id)
+                        }}
+                      >
                         <FiCheckCircle size={20} />
                       </button>
                     )}
