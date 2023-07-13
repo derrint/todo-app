@@ -45,11 +45,12 @@ export default function Home() {
 
   // ----- handle update todo -----
 
-  const handleCompleteTodo = (id: number | string) => {
-    const data = {
+  const handleUpdateTodo = (id: number | string, data: ITodo) => {
+    const newData = {
+      ...data,
       completed: true
     }
-    dispatch(updateTodo(id, data))
+    dispatch(updateTodo(id, newData))
   }
 
   // ----- handle remove todo -----
@@ -115,15 +116,15 @@ export default function Home() {
               </button>
             </div>
 
-            {todos.map(({ id, completed, todo }: ITodo) => {
+            {todos.map((item: ITodo) => {
               return (
                 <div
-                  key={id}
+                  key={item.id}
                   id="task"
                   className="flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5"
                 >
                   <div className="inline-flex items-center space-x-2 align-middle">
-                    {completed ? (
+                    {item.completed ? (
                       <div className="w-6 h-6 text-slate-500">
                         <FiCheck size={20} />
                       </div>
@@ -131,19 +132,19 @@ export default function Home() {
                       <button
                         className="w-6 h-6 text-slate-500 hover:text-indigo-600 hover:cursor-pointer"
                         onClick={() => {
-                          handleCompleteTodo(id)
+                          handleUpdateTodo(item.id, item)
                         }}
                       >
                         <FiCheckCircle size={20} />
                       </button>
                     )}
 
-                    <div className={completed ? 'text-slate-500 line-through' : ''}>{todo}</div>
+                    <div className={item.completed ? 'text-slate-500 line-through' : ''}>{item.todo}</div>
                   </div>
                   <button
                     className="w-6 h-6 text-slate-500 hover:text-red-600"
                     onClick={() => {
-                      handleRemoveTodo(id)
+                      handleRemoveTodo(item.id)
                     }}
                   >
                     <FiTrash2 size={20} />

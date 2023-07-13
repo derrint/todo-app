@@ -42,12 +42,20 @@ export const updateTodo =
   (id: number | string, payload: any): any =>
   async (dispatch: any) => {
     try {
-      const res = await todoService.update(id, payload)
-      dispatch({
-        type: UPDATE_TODO,
-        payload: res.data
-      })
-      return Promise.resolve(res.data)
+      if (typeof id === 'number') {
+        const res = await todoService.update(id, { completed: payload.completed })
+        dispatch({
+          type: UPDATE_TODO,
+          payload: res.data
+        })
+        return Promise.resolve(res.data)
+      } else {
+        dispatch({
+          type: UPDATE_TODO,
+          payload
+        })
+        return Promise.resolve(payload)
+      }
     } catch (err) {
       return Promise.reject(err)
     }
@@ -57,12 +65,19 @@ export const removeTodo =
   (id: number | string): any =>
   async (dispatch: any) => {
     try {
-      const res = await todoService.remove(id)
-      dispatch({
-        type: REMOVE_TODO,
-        payload: { id }
-      })
-      return Promise.resolve(res.data)
+      if (typeof id === 'number') {
+        const res = await todoService.remove(id)
+        dispatch({
+          type: REMOVE_TODO,
+          payload: { id }
+        })
+        return Promise.resolve(res.data)
+      } else {
+        dispatch({
+          type: REMOVE_TODO,
+          payload: { id }
+        })
+      }
     } catch (err) {
       Promise.reject(err)
     }
