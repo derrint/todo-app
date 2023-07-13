@@ -1,7 +1,8 @@
-import { ADD_TODO, GET_TODOS, UPDATE_TODO, REMOVE_TODO } from '@/store/types'
-import todoService from '@/services/todo'
 import { v4 as uuidv4 } from 'uuid'
+
 import { ITodo } from '@/interfaces/todo'
+import todoService from '@/services/todo'
+import { ADD_TODO, GET_TODOS, UPDATE_TODO, REMOVE_TODO } from '@/store/types'
 
 export const getTodos = (): any => async (dispatch: any) => {
   try {

@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FiCheck, FiCheckCircle, FiPlus, FiRotateCcw, FiTrash2 } from 'react-icons/fi'
 
-import { addTodo, getTodos, removeTodo, updateTodo } from '@/store/actions/todos'
+import { addTodo, getTodos, removeTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo } from '@/interfaces/todo'
 
 export default function Home() {
   const dispatch = useDispatch()
   const { todos } = useSelector((state: any) => state.todos)
+
+  const [newTodo, setNewTodo] = useState('')
 
   // ----- handle get todo -----
 
@@ -27,12 +29,11 @@ export default function Home() {
     }
 
     if (newTodo) {
-      dispatch(addTodo(JSON.stringify(newTodoData)))
+      dispatch(addTodo(newTodoData))
       setNewTodo('')
     }
   }
 
-  const [newTodo, setNewTodo] = useState('')
   const handleOnChangeNewTodo = (event: any) => {
     setNewTodo(event.target.value)
   }
@@ -91,7 +92,7 @@ export default function Home() {
           </div>
           <p className="text-slate-500">Hello, here are your latest tasks</p>
 
-          <div id="tasks" className="my-5">
+          <div id="tasks" className="my-8">
             <div
               id="task"
               className="flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5"
