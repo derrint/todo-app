@@ -1,5 +1,5 @@
 import { ITodo } from '@/interfaces/todo'
-import { ADD_TODO, GET_TODOS, UPDATE_TODO } from '@/store/types'
+import { ADD_TODO, GET_TODOS, REMOVE_TODO, UPDATE_TODO } from '@/store/types'
 
 const initialState = {
   todos: [],
@@ -35,6 +35,13 @@ const todoReducer = (state = initialState, { type, payload }: any) => {
         }),
         loading: false
       }
+    case REMOVE_TODO:
+      return {
+        ...state,
+        todos: state.todos.filter(({ id }) => id !== payload.id),
+        loading: false
+      }
+
     default:
       return state
   }

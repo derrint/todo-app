@@ -5,7 +5,7 @@ const todoService = {
     return http.get('/todos')
   },
 
-  getByUser(id: any) {
+  getByUser(id: number) {
     return http.get(`/todos/user/${id}`)
   },
 
@@ -15,19 +15,11 @@ const todoService = {
 
   update(id: number, data: any) {
     return http.put(`/todos/${id}`, data)
+  },
+
+  remove(id: number) {
+    return http.delete(`/todos/${id}`)
   }
-
-  // delete(id) {
-  //   return http.delete(`/tutorials/${id}`)
-  // }
-
-  // deleteAll() {
-  //   return http.delete(`/tutorials`)
-  // }
-
-  // findByTitle(title) {
-  //   return http.get(`/tutorials?title=${title}`)
-  // }
 }
 
 export default todoService

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FiCheck, FiCheckCircle, FiPlus, FiTrash2 } from 'react-icons/fi'
 
-import { addTodo, getTodos, updateTodo } from '@/store/actions/todos'
+import { addTodo, getTodos, removeTodo, updateTodo } from '@/store/actions/todos'
 import { ITodo } from '@/interfaces/todo'
 
 export default function Home() {
@@ -54,6 +54,12 @@ export default function Home() {
       completed: true
     }
     dispatch(updateTodo(id, data))
+  }
+
+  // ----- handle remove todo -----
+
+  const handleRemoveTodo = (id: number) => {
+    dispatch(removeTodo(id))
   }
 
   return (
@@ -145,7 +151,12 @@ export default function Home() {
 
                     <div className={completed ? 'text-slate-500 line-through' : ''}>{todo}</div>
                   </div>
-                  <button className="w-6 h-6 text-slate-500 hover:text-red-600">
+                  <button
+                    className="w-6 h-6 text-slate-500 hover:text-red-600"
+                    onClick={() => {
+                      handleRemoveTodo(id)
+                    }}
+                  >
                     <FiTrash2 size={20} />
                   </button>
                 </div>
