@@ -153,7 +153,12 @@ export default function Home() {
               )
             })}
           </div>
-          <p className="text-xs text-slate-500 text-center">Last updated 12 minutes ago</p>
+          <p className="text-xs text-slate-500 text-center">
+            Data fetched from{' '}
+            <a href="https://dummyjson.com/" className="text-indigo-600" target="_blank" rel="noreferrer">
+              dummyJSON
+            </a>
+          </p>
         </div>
       </main>
     </>
