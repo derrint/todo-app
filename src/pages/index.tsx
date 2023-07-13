@@ -2,7 +2,7 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { FiCheck, FiCheckCircle, FiPlus, FiTrash2 } from 'react-icons/fi'
+import { FiCheck, FiCheckCircle, FiPlus, FiRotateCcw, FiTrash2 } from 'react-icons/fi'
 
 import { addTodo, getTodos, removeTodo, updateTodo } from '@/store/actions/todos'
 import { ITodo } from '@/interfaces/todo'
@@ -16,10 +16,6 @@ export default function Home() {
   const onGetTodo = () => {
     dispatch(getTodos())
   }
-
-  useEffect(() => {
-    onGetTodo()
-  }, [])
 
   // ----- handle add todo -----
 
@@ -49,7 +45,7 @@ export default function Home() {
 
   // ----- handle update todo -----
 
-  const handleCompleteTodo = (id: number) => {
+  const handleCompleteTodo = (id: number | string) => {
     const data = {
       completed: true
     }
@@ -58,9 +54,15 @@ export default function Home() {
 
   // ----- handle remove todo -----
 
-  const handleRemoveTodo = (id: number) => {
+  const handleRemoveTodo = (id: number | string) => {
     dispatch(removeTodo(id))
   }
+
+  // ----- handle on load -----
+
+  useEffect(() => {
+    onGetTodo()
+  }, [])
 
   return (
     <>
@@ -77,26 +79,13 @@ export default function Home() {
               <h1 className="text-3xl font-medium">Todo list</h1>
             </div>
             <div className="inline-flex space-x-2 items-center">
-              <a
-                href="#"
+              <button
+                onClick={() => onGetTodo()}
                 className="p-2 border border-slate-200 rounded-md inline-flex space-x-1 items-center text-indigo-200 hover:text-white bg-indigo-600 hover:bg-indigo-500"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-4 h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                <FiRotateCcw size={16} />
                 <span className="text-sm font-medium hidden md:block">Reset</span>
-              </a>
+              </button>
             </div>
           </div>
           <p className="text-slate-500">Hello, here are your latest tasks</p>

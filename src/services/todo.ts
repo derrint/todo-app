@@ -5,7 +5,7 @@ const todoService = {
     return http.get('/todos')
   },
 
-  getByUser(id: number) {
+  getByUser(id: number | string) {
     return http.get(`/todos/user/${id}`)
   },
 
@@ -13,11 +13,11 @@ const todoService = {
     return http.post('/todos/add', data)
   },
 
-  update(id: number, data: any) {
+  update(id: number | string, data: any) {
     return http.put(`/todos/${id}`, data)
   },
 
-  remove(id: number) {
+  remove(id: number | string) {
     return http.delete(`/todos/${id}`)
   }
 }

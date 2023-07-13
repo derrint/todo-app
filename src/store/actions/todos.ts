@@ -1,5 +1,7 @@
 import { ADD_TODO, GET_TODOS, UPDATE_TODO, REMOVE_TODO } from '@/store/types'
 import todoService from '@/services/todo'
+import { v4 as uuidv4 } from 'uuid'
+import { ITodo } from '@/interfaces/todo'
 
 export const getTodos = (): any => async (dispatch: any) => {
   try {
@@ -19,9 +21,16 @@ export const addTodo =
   async (dispatch: any) => {
     try {
       const res = await todoService.add(payload)
+
+      // data need to be overrided, to handle duplicate ids
+      const newData: ITodo = {
+        ...res.data,
+        id: uuidv4()
+      }
+
       dispatch({
         type: ADD_TODO,
-        payload: res.data
+        payload: newData
       })
       return Promise.resolve(res.data)
     } catch (err) {
@@ -30,7 +39,7 @@ export const addTodo =
   }
 
 export const updateTodo =
-  (id: number, payload: any): any =>
+  (id: number | string, payload: any): any =>
   async (dispatch: any) => {
     try {
       const res = await todoService.update(id, payload)
@@ -45,7 +54,7 @@ export const updateTodo =
   }
 
 export const removeTodo =
-  (id: number): any =>
+  (id: number | string): any =>
   async (dispatch: any) => {
     try {
       const res = await todoService.remove(id)
