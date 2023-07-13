@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Head from 'next/head'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { FiCheck, FiCheckCircle, FiPlus, FiTrash2 } from 'react-icons/fi'
 
 import { addTodo, getTodos } from '@/store/actions/todos'
 
@@ -15,22 +17,39 @@ export default function Home() {
   const dispatch = useDispatch()
   const { todos } = useSelector((state: any) => state.todos)
 
-  const fetchTodos = () => {
+  // ----- handle get todo -----
+
+  const onGetTodo = () => {
     dispatch(getTodos())
   }
 
-  const dummyData = {
-    todo: 'Use DummyJSON in the project',
-    completed: false,
-    userId: 5
-  }
-  const insertTodo = () => {
-    dispatch(addTodo(JSON.stringify(dummyData)))
+  useEffect(() => {
+    onGetTodo()
+  }, [])
+
+  // ----- handle add todo -----
+
+  const onAddTodo = (todo: string) => {
+    const newTodoData = {
+      todo,
+      completed: false,
+      userId: 1
+    }
+
+    dispatch(addTodo(JSON.stringify(newTodoData)))
+    setNewTodo('')
   }
 
-  useEffect(() => {
-    fetchTodos()
-  }, [])
+  const [newTodo, setNewTodo] = useState('')
+  const handleOnChange = (event: any) => {
+    setNewTodo(event.target.value)
+  }
+
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      onAddTodo(event.target.value)
+    }
+  }
 
   return (
     <>
@@ -71,64 +90,54 @@ export default function Home() {
           </div>
           <p className="text-slate-500">Hello, here are your latest tasks</p>
 
-          <button onClick={insertTodo}>tambah</button>
-
           <div id="tasks" className="my-5">
+            <div
+              id="task"
+              className="flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5"
+            >
+              <div className="inline-flex items-center space-x-2 align-middle flex-grow">
+                <input
+                  type="text"
+                  value={newTodo}
+                  onChange={handleOnChange}
+                  onKeyDown={handleKeyDown}
+                  className="outline-none w-full border-slate-200"
+                  placeholder="Add item here..."
+                />
+              </div>
+              <button
+                className="w-6 h-6 text-slate-500 hover:text-indigo-600"
+                onClick={() => {
+                  onAddTodo(newTodo)
+                }}
+              >
+                <FiPlus size={20} />
+              </button>
+            </div>
+
             {todos.map(({ id, completed, todo }: ITodo) => {
               return (
                 <div
                   key={id}
                   id="task"
-                  className="flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent"
+                  className="flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5"
                 >
-                  <div className="inline-flex items-center space-x-2">
-                    <div>
-                      {completed ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="w-6 h-6 text-slate-500"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="w-6 h-6 text-slate-500 hover:text-indigo-600 hover:cursor-pointer"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      )}
-                    </div>
+                  <div className="inline-flex items-center space-x-2 align-middle">
+                    {completed ? (
+                      <div className="w-6 h-6 text-slate-500">
+                        <FiCheck size={20} />
+                      </div>
+                    ) : (
+                      <button className="w-6 h-6 text-slate-500 hover:text-indigo-600 hover:cursor-pointer">
+                        <FiCheckCircle size={20} />
+                      </button>
+                    )}
+
                     <div className={completed ? 'text-slate-500 line-through' : ''}>{todo}</div>
                   </div>
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-4 h-4 text-slate-500 hover:text-slate-700 hover:cursor-pointer"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                      />
-                    </svg>
-                  </div>
+                  <button className="w-6 h-6 text-slate-500 hover:text-red-600">
+                    <FiTrash2 size={20} />
+                  </button>
                 </div>
               )
             })}
