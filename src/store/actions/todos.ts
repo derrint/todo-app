@@ -1,10 +1,9 @@
 import { ADD_TODO, GET_TODOS } from '@/store/types'
-import http from '@/utils/http'
-import axios from 'axios'
+import todoService from '@/services/todo'
 
 export const getTodos = (): any => async (dispatch: any) => {
   try {
-    const res = await http.get('/user/1')
+    const res = await todoService.getByUser(1)
     dispatch({
       type: GET_TODOS,
       payload: res.data
@@ -19,7 +18,7 @@ export const addTodo =
   (payload: any): any =>
   async (dispatch: any) => {
     try {
-      const res = await http.post('/add', payload)
+      const res = await todoService.add(payload)
       dispatch({
         type: ADD_TODO,
         payload: res.data

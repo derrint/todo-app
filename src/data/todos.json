@@ -1,0 +1,38 @@
+[
+  {
+    "id": 17,
+    "todo": "Create a cookbook with favorite recipes",
+    "completed": false,
+    "userId": 1
+  },
+  {
+    "id": 18,
+    "todo": "Bake a pie with some friends",
+    "completed": false,
+    "userId": 1
+  },
+  {
+    "id": 54,
+    "todo": "Start a daily journal",
+    "completed": false,
+    "userId": 1
+  },
+  {
+    "id": 100,
+    "todo": "Learn a new programming language",
+    "completed": true,
+    "userId": 1
+  },
+  {
+    "id": 141,
+    "todo": "Visit a nearby museum",
+    "completed": true,
+    "userId": 1
+  },
+  { "id": 19, "todo": "Create a compost pile", "completed": true, "userId": 5 },
+  { "id": 85, "todo": "Make a budget", "completed": true, "userId": 5 },
+  { "id": 103, "todo": "Go to a local thrift shop", "completed": true, "userId": 5 },
+  { "id": 73, "todo": "Learn how to play a new sport", "completed": false, "userId": 25 },
+  { "id": 92, "todo": "Go on a long drive with no music", "completed": false, "userId": 25 },
+  { "id": 143, "todo": "Drink water", "completed": false, "userId": 25 }
+]
