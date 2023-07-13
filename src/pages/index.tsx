@@ -1,12 +1,8 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { getTodos } from '@/store/actions/todoActions'
-
-const inter = Inter({ subsets: ['latin'] })
+import { addTodo, getTodos } from '@/store/actions/todoActions'
 
 interface ITodo {
   completed: boolean
@@ -18,11 +14,23 @@ interface ITodo {
 export default function Home() {
   const dispatch = useDispatch()
   const { todos } = useSelector((state: any) => state.todos)
-  useEffect(() => {
-    dispatch(getTodos())
-  }, [dispatch])
 
-  console.log(todos)
+  const fetchTodos = () => {
+    dispatch(getTodos())
+  }
+
+  const dummyData = {
+    todo: 'Use DummyJSON in the project',
+    completed: false,
+    userId: 5
+  }
+  const insertTodo = () => {
+    dispatch(addTodo(JSON.stringify(dummyData)))
+  }
+
+  useEffect(() => {
+    fetchTodos()
+  }, [])
 
   return (
     <>
@@ -38,7 +46,7 @@ export default function Home() {
             <div>
               <h1 className="text-3xl font-medium">Todo list</h1>
             </div>
-            <div className="inline-flex space-x-2 items-center">
+            {/* <div className="inline-flex space-x-2 items-center">
               <a
                 href="#"
                 className="p-2 border border-slate-200 rounded-md inline-flex space-x-1 items-center text-indigo-200 hover:text-white bg-indigo-600 hover:bg-indigo-500"
@@ -79,9 +87,11 @@ export default function Home() {
                 </svg>
                 <span className="text-sm hidden md:block">Latest</span>
               </a>
-            </div>
+            </div> */}
           </div>
           <p className="text-slate-500">Hello, here are your latest tasks</p>
+
+          <button onClick={insertTodo}>tambah</button>
 
           <div id="tasks" className="my-5">
             {todos.map(({ id, completed, todo }: ITodo) => {
