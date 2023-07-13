@@ -121,7 +121,10 @@ export default function Home() {
                 <div
                   key={item.id}
                   id="task"
-                  className="flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5"
+                  className={`flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5 ${
+                    !item.completed &&
+                    'bg-gradient-to-r from-transparent to-transparent hover:from-slate-100 transition ease-linear duration-150'
+                  }`}
                 >
                   <div className="inline-flex items-center space-x-2 align-middle">
                     {item.completed ? (
