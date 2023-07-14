@@ -16,7 +16,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## See live demo
 
-This app is already deployed & available to be tested [here](https://derrint-todo-app.vercel.app/) from the creators of Next.js.
+This app is also available to be tested [here](https://derrint-todo-app.vercel.app/)
 
 ## Demo Account
 
