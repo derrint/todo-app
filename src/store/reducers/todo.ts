@@ -1,49 +1,30 @@
 import { ITodo } from '@/interfaces/todo'
 import { ADD_TODO, GET_TODOS, REMOVE_TODO, UPDATE_TODO } from '@/store/types'
 
-const initialState = {
-  todos: [],
-  loading: true
-}
+const initialState: any = []
 
-const todoReducer = (state = initialState, { type, payload }: any) => {
+const todoReducer = (todos = initialState, { type, payload }: any) => {
   switch (type) {
     case GET_TODOS:
-      return {
-        ...state,
-        todos: payload.todos,
-        loading: false
-      }
+      return payload.todos
     case ADD_TODO:
-      return {
-        ...state,
-        todos: [payload, ...state.todos],
-        loading: false
-      }
+      return [payload, ...todos]
     case UPDATE_TODO:
-      return {
-        ...state,
-        todos: state.todos.map((todo: ITodo) => {
-          if (todo.id === payload.id) {
-            return {
-              ...todo,
-              ...payload
-            }
-          } else {
-            return todo
+      return todos.map((todo: ITodo) => {
+        if (todo.id === payload.id) {
+          return {
+            ...todo,
+            ...payload
           }
-        }),
-        loading: false
-      }
+        } else {
+          return todo
+        }
+      })
     case REMOVE_TODO:
-      return {
-        ...state,
-        todos: state.todos.filter(({ id }) => id !== payload.id),
-        loading: false
-      }
+      return todos.filter(({ id }: any) => id !== payload.id)
 
     default:
-      return state
+      return todos
   }
 }
 

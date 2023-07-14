@@ -13,7 +13,7 @@ import { useRouter } from 'next/router'
 export default function Home() {
   const router = useRouter()
   const dispatch = useDispatch()
-  const { todos } = useSelector((state: any) => state.todos)
+  const { todos } = useSelector((state: any) => state)
 
   const [newTodo, setNewTodo] = useState('')
 
