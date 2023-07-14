@@ -1,4 +1,4 @@
-import { LOGIN, SET_USER, SET_LOGIN_STATUS } from '@/store/types'
+import { LOGIN, SET_USER, SET_LOGIN_STATUS, LOGOUT } from '@/store/types'
 
 const initialState = {
   isSignedIn: false,
@@ -22,6 +22,12 @@ const authReducer = (state = initialState, { type, payload }: any) => {
       return {
         ...state,
         isSignedIn: payload
+      }
+    case LOGOUT:
+      return {
+        ...state,
+        isSignedIn: false,
+        user: payload
       }
 
     default:

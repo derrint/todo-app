@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 
 import authService from '@/services/auth'
-import { LOGIN, SET_LOGIN_STATUS, SET_USER } from '@/store/types'
+import { LOGIN, LOGOUT, SET_LOGIN_STATUS, SET_USER } from '@/store/types'
 
 export const login =
   (payload: any): any =>
@@ -41,6 +41,21 @@ export const loadApp = (): any => async (dispatch: any) => {
     })
 
     return Promise.resolve({ user, isSignedIn })
+  } catch (err) {
+    return Promise.reject(err)
+  }
+}
+
+export const logout = (): any => async (dispatch: any) => {
+  try {
+    dispatch({
+      type: LOGOUT,
+      payload: {}
+    })
+
+    Cookies.remove('_derrint_todo_app')
+
+    return Promise.resolve()
   } catch (err) {
     return Promise.reject(err)
   }

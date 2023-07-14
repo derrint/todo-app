@@ -6,8 +6,12 @@ import { FiCheck, FiCheckCircle, FiPlus, FiRotateCcw, FiTrash2 } from 'react-ico
 
 import { addTodo, getTodos, removeTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo } from '@/interfaces/todo'
+import { logout } from '@/store/actions/auth'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/router'
 
 export default function Home() {
+  const router = useRouter()
   const dispatch = useDispatch()
   const { todos } = useSelector((state: any) => state.todos)
 
@@ -65,6 +69,14 @@ export default function Home() {
   useEffect(() => {
     onGetTodo()
   }, [])
+
+  // ----- handle logout -----
+
+  const onLogout = async () => {
+    dispatch(logout())
+    router.replace('/login')
+    toast.success(`See you..`)
+  }
 
   return (
     <>
@@ -158,10 +170,10 @@ export default function Home() {
             })}
           </div>
           <p className="text-xs text-slate-500 text-center">
-            Data fetched from{' '}
-            <a href="https://dummyjson.com/" className="text-indigo-600" target="_blank" rel="noreferrer">
-              dummyJSON
-            </a>
+            Already done with your things?{' '}
+            <button onClick={onLogout} className="text-indigo-600">
+              Log out
+            </button>
           </p>
         </div>
       </main>
