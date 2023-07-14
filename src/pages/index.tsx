@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FiCheck, FiCheckCircle, FiPlus, FiRotateCcw, FiTrash2 } from 'react-icons/fi'
 
-import { addTodo, getTodos, removeTodo, updateTodo } from '@/store/actions/todo'
+import { addTodo, getTodosByUser, removeTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo } from '@/interfaces/todo'
 import { logout } from '@/store/actions/auth'
 import { toast } from 'react-toastify'
@@ -14,13 +14,14 @@ export default function Home() {
   const router = useRouter()
   const dispatch = useDispatch()
   const { todos, auth } = useSelector((state: any) => state)
+  const userId = auth?.user?.id
 
   const [newTodo, setNewTodo] = useState('')
 
   // ----- handle get todo -----
 
   const onGetTodo = () => {
-    dispatch(getTodos())
+    dispatch(getTodosByUser(userId))
   }
 
   // ----- handle add todo -----
@@ -29,7 +30,7 @@ export default function Home() {
     const newTodoData = {
       todo,
       completed: false,
-      userId: 1
+      userId
     }
 
     if (newTodo) {

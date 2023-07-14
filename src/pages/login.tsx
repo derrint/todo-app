@@ -13,8 +13,8 @@ export default function Home() {
   const dispatch = useDispatch()
 
   const initialForm = {
-    username: 'kminchelle',
-    password: '0lelplR'
+    username: '',
+    password: ''
   }
   const [form, setForm] = useState(initialForm)
 
