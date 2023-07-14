@@ -13,7 +13,7 @@ import { useRouter } from 'next/router'
 export default function Home() {
   const router = useRouter()
   const dispatch = useDispatch()
-  const { todos } = useSelector((state: any) => state)
+  const { todos, auth } = useSelector((state: any) => state)
 
   const [newTodo, setNewTodo] = useState('')
 
@@ -90,7 +90,7 @@ export default function Home() {
         <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
           <div className="flex flex-row justify-between items-center">
             <div>
-              <h1 className="text-3xl font-medium">Todo list</h1>
+              <h1 className="text-3xl font-medium">Todo List</h1>
             </div>
             <div className="inline-flex space-x-2 items-center">
               <button
@@ -102,7 +102,7 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <p className="text-slate-500">Hello, here are your latest tasks</p>
+          <p className="text-slate-500">Hello {auth?.user?.firstName}, here are your latest tasks.</p>
 
           <div id="tasks" className="my-8">
             <div
