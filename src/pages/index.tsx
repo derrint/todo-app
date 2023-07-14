@@ -10,11 +10,23 @@ import { logout } from '@/store/actions/auth'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 
-export default function Home() {
+export const pageTitleTestid = 'page-title'
+export const pageSubtitleTestid = 'page-subtitle'
+export const todoItemWrapperTestid = 'todo-item-wrapper'
+export const todoItemTestid = 'todo-item'
+export const todoInputTestid = 'todo-input'
+export const todoButtonAddTestid = 'todo-button-add'
+export const todoButtonUpdateTestid = 'todo-button-update'
+export const todoButtonRemoveTestid = 'todo-button-remove'
+export const resetButtonTestid = 'reset-button'
+export const logoutButtonTestid = 'logout-button'
+
+const Home = () => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const { todos, auth } = useSelector((state: any) => state)
-  const userId = auth?.user?.id
+  const todos = useSelector((state: any) => state.todos)
+  const { user, isSignedIn } = useSelector((state: any) => state.auth)
+  const userId = user?.id
 
   const [newTodo, setNewTodo] = useState('')
 
@@ -68,10 +80,10 @@ export default function Home() {
   // ----- handle on load -----
 
   useEffect(() => {
-    if (auth.isSignedIn) {
+    if (isSignedIn) {
       onGetTodo()
     }
-  }, [auth.isSignedIn])
+  }, [isSignedIn])
 
   // ----- handle logout -----
 
@@ -93,21 +105,26 @@ export default function Home() {
         <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
           <div className="flex flex-row justify-between items-center">
             <div>
-              <h1 className="text-3xl font-medium">Todo List</h1>
+              <h1 className="text-3xl font-medium" data-testid={pageTitleTestid}>
+                Todo List
+              </h1>
             </div>
             <div className="inline-flex space-x-2 items-center">
               <button
                 onClick={() => onGetTodo()}
                 className="p-2 border border-slate-200 rounded-md inline-flex space-x-1 items-center text-indigo-200 hover:text-white bg-indigo-600 hover:bg-indigo-500"
+                data-testid={resetButtonTestid}
               >
                 <FiRotateCcw size={16} />
                 <span className="text-sm font-medium hidden md:block">Reset</span>
               </button>
             </div>
           </div>
-          <p className="text-slate-500">Hello {auth?.user?.firstName}, here are your latest tasks.</p>
+          <p className="text-slate-500" data-testid={pageSubtitleTestid}>
+            Hello {user?.firstName}, here are your latest tasks.
+          </p>
 
-          <div id="tasks" className="my-8">
+          <div id="tasks" className="my-8" data-testid={todoItemWrapperTestid}>
             <div
               id="task"
               className="flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5"
@@ -120,6 +137,7 @@ export default function Home() {
                   onKeyDown={handleKeyDownNewTodo}
                   className="outline-none w-full border-slate-200"
                   placeholder="Add item here..."
+                  data-testid={todoInputTestid}
                 />
               </div>
               <button
@@ -127,6 +145,7 @@ export default function Home() {
                 onClick={() => {
                   onAddTodo(newTodo)
                 }}
+                data-testid={todoButtonAddTestid}
               >
                 <FiPlus size={20} />
               </button>
@@ -141,6 +160,7 @@ export default function Home() {
                     !item.completed &&
                     'bg-gradient-to-r from-transparent to-transparent hover:from-slate-100 transition ease-linear duration-150'
                   }`}
+                  data-testid={todoItemTestid}
                 >
                   <div className="inline-flex items-center space-x-2 align-middle">
                     {item.completed ? (
@@ -153,6 +173,7 @@ export default function Home() {
                         onClick={() => {
                           handleUpdateTodo(item.id, item)
                         }}
+                        data-testid={todoButtonUpdateTestid}
                       >
                         <FiCheckCircle size={20} />
                       </button>
@@ -165,6 +186,7 @@ export default function Home() {
                     onClick={() => {
                       handleRemoveTodo(item.id)
                     }}
+                    data-testid={todoButtonRemoveTestid}
                   >
                     <FiTrash2 size={20} />
                   </button>
@@ -174,7 +196,7 @@ export default function Home() {
           </div>
           <p className="text-xs text-slate-500 text-center">
             Already done with your things?{' '}
-            <button onClick={onLogout} className="text-indigo-600">
+            <button onClick={onLogout} className="text-indigo-600" data-testid={logoutButtonTestid}>
               Log out
             </button>
           </p>
@@ -183,3 +205,4 @@ export default function Home() {
     </>
   )
 }
+export default Home
