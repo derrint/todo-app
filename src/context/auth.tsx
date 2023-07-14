@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 
 import { loadApp } from '@/store/actions/auth'
@@ -9,25 +9,26 @@ import { loadApp } from '@/store/actions/auth'
 const ProtectRoute = ({ children }: any) => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const { isSignedIn } = useSelector((state: any) => state.auth)
 
   const authRoute = (isSignedIn: boolean, paths: string[]) => {
     // ----- prevent routing for some cases -----
     if (isSignedIn === false && paths.includes(router.pathname)) {
-      setTimeout(() => {
-        toast.error('You need to login to see Todo page.')
+      toast.error('You need to login to see Todo page.')
 
-        router.push('/login')
-      }, 200)
+      router.push('/login')
     }
   }
 
   const protectedRoutes = ['/']
 
-  useEffect(() => {
-    dispatch(loadApp())
+  const handleOnLoad = async () => {
+    const { isSignedIn } = await dispatch(loadApp())
     authRoute(isSignedIn, protectedRoutes)
-  }, [isSignedIn, router.pathname])
+  }
+
+  useEffect(() => {
+    handleOnLoad()
+  }, [])
 
   return children
 }

@@ -1,14 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FiLogIn } from 'react-icons/fi'
 
 import { login } from '@/store/actions/auth'
+import { toast } from 'react-toastify'
 
 export default function Home() {
+  const router = useRouter()
   const dispatch = useDispatch()
-  const { user, isSignedIn, todos } = useSelector((state: any) => state)
+  const { auth } = useSelector((state: any) => state)
 
   const initialForm = {
     username: 'kminchelle',
@@ -32,10 +35,19 @@ export default function Home() {
 
   // ----- handle login -----
 
-  const onLogin = (data: any) => {
+  const onLogin = async (data: any) => {
     if (data.username && data.password) {
-      dispatch(login(data))
-      setForm(initialForm)
+      try {
+        const { firstName } = await dispatch(login(data))
+        setForm(initialForm)
+
+        toast.success(`Welcome back, ${firstName}`)
+        setTimeout(() => {
+          router.replace('/')
+        }, 500)
+      } catch (error: any) {
+        toast.error(error.response.data.message)
+      }
     }
   }
 
@@ -94,7 +106,7 @@ export default function Home() {
               </button>
             </div>
           </form>
-          <pre>{JSON.stringify({ user, form, todos }, null, 4)}</pre>
+          <pre>{JSON.stringify({ auth, form }, null, 4)}</pre>
         </div>
       </main>
     </>

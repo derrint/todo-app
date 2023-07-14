@@ -25,24 +25,22 @@ export const login =
 export const loadApp = (): any => async (dispatch: any) => {
   try {
     const userDataJSON = Cookies.get('_derrint_todo_app')
+    const user = userDataJSON ? JSON.parse(userDataJSON) : {}
 
-    if (userDataJSON) {
-      const userData = JSON.parse(userDataJSON)
-      dispatch({
-        type: SET_USER,
-        payload: userData
-      })
-      dispatch({
-        type: SET_LOGIN_STATUS,
-        payload: true
-      })
-      return Promise.resolve(userData)
-    } else {
-      dispatch({
-        type: SET_LOGIN_STATUS,
-        payload: false
-      })
+    let isSignedIn = false
+    if (Object.hasOwn(user, 'token')) {
+      isSignedIn = true
     }
+    dispatch({
+      type: SET_USER,
+      payload: user
+    })
+    dispatch({
+      type: SET_LOGIN_STATUS,
+      payload: isSignedIn
+    })
+
+    return Promise.resolve({ user, isSignedIn })
   } catch (err) {
     return Promise.reject(err)
   }
