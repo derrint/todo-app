@@ -16,6 +16,9 @@ const ProtectRoute = ({ children }: any) => {
       toast.error('You need to login to see Todo page.')
 
       router.push('/login')
+    } else if (isSignedIn === true && router.pathname === '/login') {
+      toast.info('You are already logged in.')
+      router.replace('/')
     }
   }
 

@@ -68,15 +68,17 @@ export default function Home() {
   // ----- handle on load -----
 
   useEffect(() => {
-    onGetTodo()
-  }, [])
+    if (auth.isSignedIn) {
+      onGetTodo()
+    }
+  }, [auth.isSignedIn])
 
   // ----- handle logout -----
 
   const onLogout = async () => {
     dispatch(logout())
-    router.replace('/login')
     toast.success(`See you..`)
+    router.replace('/login')
   }
 
   return (

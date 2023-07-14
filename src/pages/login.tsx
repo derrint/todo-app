@@ -38,9 +38,9 @@ export default function Home() {
     if (data.username && data.password) {
       try {
         const { firstName } = await dispatch(login(data))
+        toast.success(`Welcome back, ${firstName}`)
         setForm(initialForm)
         router.replace('/')
-        toast.success(`Welcome back, ${firstName}`)
       } catch (error: any) {
         toast.error(error.response.data.message)
       }
