@@ -4,5 +4,5 @@ import authReducer from './auth'
 
 export default combineReducers({
   todos: todoReducer,
-  user: authReducer
+  auth: authReducer
 })

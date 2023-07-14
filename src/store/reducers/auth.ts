@@ -1,5 +1,4 @@
-import { ITodo } from '@/interfaces/todo'
-import { ADD_TODO, GET_TODOS, LOGIN, REMOVE_TODO, UPDATE_TODO } from '@/store/types'
+import { LOGIN, SET_USER, SET_LOGIN_STATUS } from '@/store/types'
 
 const initialState = {
   isSignedIn: false,
@@ -13,6 +12,16 @@ const authReducer = (state = initialState, { type, payload }: any) => {
         ...state,
         isSignedIn: true,
         user: payload
+      }
+    case SET_USER:
+      return {
+        ...state,
+        user: payload
+      }
+    case SET_LOGIN_STATUS:
+      return {
+        ...state,
+        isSignedIn: payload
       }
 
     default:
