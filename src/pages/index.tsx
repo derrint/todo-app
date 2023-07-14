@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { FiCheck, FiCheckCircle, FiPlus, FiRotateCcw, FiTrash2 } from 'react-icons/fi'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import { addTodo, getTodosByUser, removeTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo } from '@/interfaces/todo'
 import { logout } from '@/store/actions/auth'
-import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
 
 export const pageTitleTestid = 'page-title'
 export const pageSubtitleTestid = 'page-subtitle'

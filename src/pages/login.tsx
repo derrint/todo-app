@@ -2,11 +2,14 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { FiLogIn } from 'react-icons/fi'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import { login } from '@/store/actions/auth'
-import { toast } from 'react-toastify'
+
+export const pageTitleTestid = 'page-title'
+export const pageSubtitleTestid = 'page-subtitle'
 
 export default function Home() {
   const router = useRouter()
