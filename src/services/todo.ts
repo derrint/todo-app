@@ -1,12 +1,8 @@
 import http from '@/utils/http'
 
 const todoService = {
-  getAll() {
-    return http.get('/todos')
-  },
-
-  getByUser(id: number | string) {
-    return http.get(`/todos/user/${id}`)
+  get() {
+    return http.get('/todo')
   },
 
   add(data: any) {

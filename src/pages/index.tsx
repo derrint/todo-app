@@ -6,7 +6,7 @@ import { FiCheck, FiCheckCircle, FiPlus, FiRotateCcw, FiTrash2 } from 'react-ico
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
-import { addTodo, getTodosByUser, removeTodo, updateTodo } from '@/store/actions/todo'
+import { addTodo, getTodos, removeTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo } from '@/interfaces/todo'
 import { logout } from '@/store/actions/auth'
 
@@ -32,8 +32,10 @@ const Home = () => {
 
   // ----- handle get todo -----
 
-  const onGetTodo = () => {
-    dispatch(getTodosByUser(userId))
+  const onGetTodo = async () => {
+    dispatch(getTodos()).catch((error: any) => {
+      toast.error(error.message)
+    })
   }
 
   // ----- handle add todo -----
