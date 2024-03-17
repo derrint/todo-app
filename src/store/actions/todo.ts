@@ -37,11 +37,14 @@ export const updateTodo =
   (id: string, payload: any): any =>
   async (dispatch: any) => {
     try {
+      const res = await todoService.update(id, payload)
+      const { data } = res.data
+
       dispatch({
         type: UPDATE_TODO,
-        payload
+        payload: data
       })
-      return Promise.resolve(payload)
+      return Promise.resolve(data)
     } catch (err) {
       return Promise.reject(err)
     }

@@ -67,6 +67,8 @@ const Home = () => {
   const handleUpdateTodo = (id: string, data: ITodoPayload) => {
     const newData: ITodoPayload = {
       ...data,
+      name: data.name,
+      details: data.details,
       done: true
     }
     dispatch(updateTodo(id, newData))
