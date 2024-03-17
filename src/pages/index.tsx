@@ -6,7 +6,7 @@ import { FiCheck, FiCheckCircle, FiPlus, FiRotateCcw, FiTrash2 } from 'react-ico
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
-import { addTodo, getTodos, removeTodo, updateTodo } from '@/store/actions/todo'
+import { addTodo, getTodos, deleteTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo, ITodoPayload } from '@/interfaces/todo'
 import { logout } from '@/store/actions/auth'
 
@@ -76,8 +76,8 @@ const Home = () => {
 
   // ----- handle remove todo -----
 
-  const handleRemoveTodo = (id: number | string) => {
-    dispatch(removeTodo(id))
+  const handleDeleteTodo = (id: string) => {
+    dispatch(deleteTodo(id))
   }
 
   // ----- handle on load -----
@@ -187,7 +187,7 @@ const Home = () => {
                   <button
                     className="w-6 h-6 text-slate-500 hover:text-red-600"
                     onClick={() => {
-                      handleRemoveTodo(item.id)
+                      handleDeleteTodo(item.id)
                     }}
                     data-testid={todoButtonRemoveTestid}
                   >

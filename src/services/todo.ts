@@ -14,8 +14,8 @@ const todoService = {
     return http.put(`/todo/${id}`, data)
   },
 
-  remove(id: number | string) {
-    return http.delete(`/todos/${id}`)
+  delete(id: string) {
+    return http.delete(`/todo/${id}`)
   }
 }
 

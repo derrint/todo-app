@@ -1,4 +1,4 @@
-import { ADD_TODO, GET_TODOS, REMOVE_TODO, UPDATE_TODO } from '@/store/types'
+import { ADD_TODO, GET_TODOS, DELETE_TODO, UPDATE_TODO } from '@/store/types'
 
 const initialState: any = []
 
@@ -10,8 +10,8 @@ const todoReducer = (todos = initialState, { type, payload }: any) => {
       return payload
     case UPDATE_TODO:
       return payload
-    case REMOVE_TODO:
-      return todos.filter(({ id }: any) => id !== payload.id)
+    case DELETE_TODO:
+      return payload
 
     default:
       return todos

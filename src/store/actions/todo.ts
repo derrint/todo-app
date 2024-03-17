@@ -1,5 +1,5 @@
 import todoService from '@/services/todo'
-import { ADD_TODO, GET_TODOS, UPDATE_TODO, REMOVE_TODO } from '@/store/types'
+import { ADD_TODO, GET_TODOS, UPDATE_TODO, DELETE_TODO } from '@/store/types'
 
 export const getTodos = (): any => async (dispatch: any) => {
   try {
@@ -50,23 +50,18 @@ export const updateTodo =
     }
   }
 
-export const removeTodo =
-  (id: number | string): any =>
+export const deleteTodo =
+  (id: string): any =>
   async (dispatch: any) => {
     try {
-      if (typeof id === 'number') {
-        const res = await todoService.remove(id)
-        dispatch({
-          type: REMOVE_TODO,
-          payload: { id }
-        })
-        return Promise.resolve(res.data.data)
-      } else {
-        dispatch({
-          type: REMOVE_TODO,
-          payload: { id }
-        })
-      }
+      const res = await todoService.delete(id)
+      const { data } = res.data
+
+      dispatch({
+        type: DELETE_TODO,
+        payload: data
+      })
+      return Promise.resolve(data)
     } catch (err) {
       Promise.reject(err)
     }
