@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
 import { addTodo, getTodos, removeTodo, updateTodo } from '@/store/actions/todo'
-import { ITodo } from '@/interfaces/todo'
+import { ITodo, ITodoPayload } from '@/interfaces/todo'
 import { logout } from '@/store/actions/auth'
 
 export const pageTitleTestid = 'page-title'
@@ -40,7 +40,7 @@ const Home = () => {
   // ----- handle add todo -----
 
   const onAddTodo = (todo: string) => {
-    const newTodoData = {
+    const newTodoData: ITodoPayload = {
       name: todo,
       done: false,
       details: '-'
@@ -64,10 +64,10 @@ const Home = () => {
 
   // ----- handle update todo -----
 
-  const handleUpdateTodo = (id: number | string, data: ITodo) => {
-    const newData = {
+  const handleUpdateTodo = (id: string, data: ITodoPayload) => {
+    const newData: ITodoPayload = {
       ...data,
-      completed: true
+      done: true
     }
     dispatch(updateTodo(id, newData))
   }

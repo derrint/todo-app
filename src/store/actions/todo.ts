@@ -1,11 +1,9 @@
 import todoService from '@/services/todo'
 import { ADD_TODO, GET_TODOS, UPDATE_TODO, REMOVE_TODO } from '@/store/types'
-import { checkError } from '@/utils/helper'
 
 export const getTodos = (): any => async (dispatch: any) => {
   try {
     const res = await todoService.get()
-    checkError(res)
     const { data } = res.data
 
     dispatch({
@@ -36,23 +34,14 @@ export const addTodo =
   }
 
 export const updateTodo =
-  (id: number | string, payload: any): any =>
+  (id: string, payload: any): any =>
   async (dispatch: any) => {
     try {
-      if (typeof id === 'number') {
-        const res = await todoService.update(id, { completed: payload.completed })
-        dispatch({
-          type: UPDATE_TODO,
-          payload: res.data.data
-        })
-        return Promise.resolve(res.data.data)
-      } else {
-        dispatch({
-          type: UPDATE_TODO,
-          payload
-        })
-        return Promise.resolve(payload)
-      }
+      dispatch({
+        type: UPDATE_TODO,
+        payload
+      })
+      return Promise.resolve(payload)
     } catch (err) {
       return Promise.reject(err)
     }

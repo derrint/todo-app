@@ -24,4 +24,26 @@ http.interceptors.request.use(
   }
 )
 
+http.interceptors.response.use(
+  (response: any) => {
+    const status = response.data.string
+    const message = response.data.error_message
+    if (status === 'error') {
+      if (message.includes('invalid token')) {
+        // remove & redirect to login page
+        Cookies.remove('_derrint_todo_app')
+        setTimeout(() => {
+          window.location.href = '/login'
+        }, 3000)
+      }
+      throw new Error(response.data.error_message)
+    }
+
+    return response
+  },
+  (error: any) => {
+    return Promise.reject(error)
+  }
+)
+
 export default http

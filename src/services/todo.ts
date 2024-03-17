@@ -1,3 +1,4 @@
+import { ITodoPayload } from '@/interfaces/todo'
 import http from '@/utils/http'
 
 const todoService = {
@@ -5,12 +6,12 @@ const todoService = {
     return http.get('/todo')
   },
 
-  add(data: any) {
+  add(data: ITodoPayload) {
     return http.post('/todo', data)
   },
 
-  update(id: number | string, data: any) {
-    return http.put(`/todos/${id}`, data)
+  update(id: string, data: ITodoPayload) {
+    return http.put(`/todo/${id}`, data)
   },
 
   remove(id: number | string) {

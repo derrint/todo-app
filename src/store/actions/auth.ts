@@ -2,14 +2,12 @@ import Cookies from 'js-cookie'
 
 import authService from '@/services/auth'
 import { LOGIN, LOGOUT, SET_LOGIN_STATUS, SET_USER } from '@/store/types'
-import { checkError } from '@/utils/helper'
 
 export const login =
   (payload: any): any =>
   async (dispatch: any) => {
     try {
       const res = await authService.login(payload)
-      checkError(res)
       const { data } = res.data
 
       dispatch({
