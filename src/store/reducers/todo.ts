@@ -8,7 +8,7 @@ const todoReducer = (todos = initialState, { type, payload }: any) => {
     case GET_TODOS:
       return payload
     case ADD_TODO:
-      return [payload, ...todos]
+      return payload
     case UPDATE_TODO:
       return todos.map((todo: ITodo) => {
         if (todo.id === payload.id) {

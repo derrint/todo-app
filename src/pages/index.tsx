@@ -26,7 +26,6 @@ const Home = () => {
   const dispatch = useDispatch()
   const todos = useSelector((state: any) => state.todos)
   const { user, isSignedIn } = useSelector((state: any) => state.auth)
-  const userId = user?.id
 
   const [newTodo, setNewTodo] = useState('')
 
@@ -42,9 +41,9 @@ const Home = () => {
 
   const onAddTodo = (todo: string) => {
     const newTodoData = {
-      todo,
-      completed: false,
-      userId
+      name: todo,
+      done: false,
+      details: '-'
     }
 
     if (newTodo) {

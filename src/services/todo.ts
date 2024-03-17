@@ -6,7 +6,7 @@ const todoService = {
   },
 
   add(data: any) {
-    return http.post('/todos/add', data)
+    return http.post('/todo', data)
   },
 
   update(id: number | string, data: any) {
