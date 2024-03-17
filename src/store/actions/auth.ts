@@ -2,21 +2,25 @@ import Cookies from 'js-cookie'
 
 import authService from '@/services/auth'
 import { LOGIN, LOGOUT, SET_LOGIN_STATUS, SET_USER } from '@/store/types'
+import { checkError } from '@/utils/helper'
 
 export const login =
   (payload: any): any =>
   async (dispatch: any) => {
     try {
       const res = await authService.login(payload)
+      checkError(res)
+      const { data } = res.data
 
       dispatch({
         type: LOGIN,
-        payload: res.data
+        payload: data
       })
+      const cookiesData = JSON.stringify({ token: data })
 
-      Cookies.set('_derrint_todo_app', JSON.stringify(res.data), { expires: 7 })
+      Cookies.set('_derrint_todo_app', cookiesData, { expires: 7 })
 
-      return Promise.resolve(res.data)
+      return Promise.resolve(data)
     } catch (err) {
       return Promise.reject(err)
     }

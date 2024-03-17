@@ -48,7 +48,7 @@ const Login = () => {
         setForm(initialForm)
         router.replace('/')
       } catch (error: any) {
-        toast.error(error.response.data.message)
+        toast.error(error.message)
       }
     }
   }
