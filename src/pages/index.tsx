@@ -159,13 +159,13 @@ const Home = () => {
                   key={item.id}
                   id="task"
                   className={`flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5 ${
-                    !item.completed &&
+                    !item.done &&
                     'bg-gradient-to-r from-transparent to-transparent hover:from-slate-100 transition ease-linear duration-150'
                   }`}
                   data-testid={todoItemTestid}
                 >
                   <div className="inline-flex items-center space-x-2 align-middle">
-                    {item.completed ? (
+                    {item.done ? (
                       <div className="w-6 h-6 text-slate-500">
                         <FiCheck size={20} />
                       </div>
@@ -181,7 +181,7 @@ const Home = () => {
                       </button>
                     )}
 
-                    <div className={item.completed ? 'text-slate-500 line-through' : ''}>{item.todo}</div>
+                    <div className={item.done ? 'text-slate-500 line-through' : ''}>{item.name}</div>
                   </div>
                   <button
                     className="w-6 h-6 text-slate-500 hover:text-red-600"

@@ -6,7 +6,7 @@ const initialState: any = []
 const todoReducer = (todos = initialState, { type, payload }: any) => {
   switch (type) {
     case GET_TODOS:
-      return payload.todos
+      return payload
     case ADD_TODO:
       return [payload, ...todos]
     case UPDATE_TODO:
