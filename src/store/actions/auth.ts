@@ -16,7 +16,7 @@ export const login =
         type: LOGIN,
         payload: data
       })
-      const cookiesData = JSON.stringify({ token: data })
+      const cookiesData = JSON.stringify({ token: data, username: payload.username })
 
       Cookies.set('_derrint_todo_app', cookiesData, { expires: 7 })
 

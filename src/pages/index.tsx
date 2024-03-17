@@ -123,7 +123,7 @@ const Home = () => {
             </div>
           </div>
           <p className="text-slate-500" data-testid={pageSubtitleTestid}>
-            Hello {user?.firstName}, here are your latest tasks.
+            Hello {user?.username}, here are your latest tasks.
           </p>
 
           <div id="tasks" className="my-8" data-testid={todoItemWrapperTestid}>
