@@ -53,7 +53,9 @@ const Home = () => {
     }
 
     if (newTodo) {
-      dispatch(addTodo(newTodoData))
+      dispatch(addTodo(newTodoData)).catch((error: any) => {
+        toast.error(error.message)
+      })
       setNewTodo('')
     }
   }
@@ -71,7 +73,9 @@ const Home = () => {
   // ----- handle update todo -----
 
   const handleUpdateTodo = (id: string, data: ITodoPayload) => {
-    dispatch(updateTodo(id, data))
+    dispatch(updateTodo(id, data)).catch((error: any) => {
+      toast.error(error.message)
+    })
   }
 
   const handleToggleCheckbox = (item: ITodo) => {
@@ -124,7 +128,9 @@ const Home = () => {
   // ----- handle delete todo -----
 
   const handleDeleteTodo = (id: string) => {
-    dispatch(deleteTodo(id))
+    dispatch(deleteTodo(id)).catch((error: any) => {
+      toast.error(error.message)
+    })
   }
 
   // ----- handle on load -----
@@ -138,7 +144,9 @@ const Home = () => {
   // ----- handle logout -----
 
   const onLogout = () => {
-    dispatch(logout())
+    dispatch(logout()).catch((error: any) => {
+      toast.error(error.message)
+    })
     toast.success(`See you..`)
     router.replace('/login')
   }
