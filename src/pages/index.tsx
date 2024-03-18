@@ -2,7 +2,7 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { FiPlus, FiRotateCcw, FiTrash2, FiSquare, FiCheckSquare, FiSave } from 'react-icons/fi'
+import { FiPlus, FiTrash2, FiSquare, FiCheckSquare, FiSave } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
@@ -158,16 +158,6 @@ const Home = () => {
               <h1 className="text-3xl font-medium" data-testid={pageTitleTestid}>
                 Todo List
               </h1>
-            </div>
-            <div className="inline-flex space-x-2 items-center">
-              <button
-                onClick={() => onGetTodo()}
-                className="p-2 border border-slate-200 rounded-md inline-flex space-x-1 items-center text-indigo-200 hover:text-white bg-indigo-600 hover:bg-indigo-500"
-                data-testid={resetButtonTestid}
-              >
-                <FiRotateCcw size={16} />
-                <span className="text-sm font-medium hidden md:block">Reset</span>
-              </button>
             </div>
           </div>
           <p className="text-slate-500" data-testid={pageSubtitleTestid}>
