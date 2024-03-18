@@ -2,7 +2,7 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { FiCheck, FiCheckCircle, FiPlus, FiRotateCcw, FiTrash2 } from 'react-icons/fi'
+import { FiPlus, FiRotateCcw, FiTrash2, FiSquare, FiCheckSquare, FiSave } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
@@ -28,10 +28,16 @@ const Home = () => {
   const { user, isSignedIn } = useSelector((state: any) => state.auth)
 
   const [newTodo, setNewTodo] = useState('')
+  const [openedTodo, setOpenedTodo] = useState('')
+  const [tempData, setTempData] = useState<ITodoPayload>({
+    name: '',
+    done: false,
+    details: ''
+  })
 
   // ----- handle get todo -----
 
-  const onGetTodo = async () => {
+  const onGetTodo = () => {
     dispatch(getTodos()).catch((error: any) => {
       toast.error(error.message)
     })
@@ -43,7 +49,7 @@ const Home = () => {
     const newTodoData: ITodoPayload = {
       name: todo,
       done: false,
-      details: '-'
+      details: ''
     }
 
     if (newTodo) {
@@ -65,16 +71,57 @@ const Home = () => {
   // ----- handle update todo -----
 
   const handleUpdateTodo = (id: string, data: ITodoPayload) => {
-    const newData: ITodoPayload = {
-      ...data,
-      name: data.name,
-      details: data.details,
-      done: true
-    }
-    dispatch(updateTodo(id, newData))
+    dispatch(updateTodo(id, data))
   }
 
-  // ----- handle remove todo -----
+  const handleToggleCheckbox = (item: ITodo) => {
+    const newData = {
+      ...item,
+      done: !item.done
+    }
+    handleUpdateTodo(item.id, newData)
+  }
+
+  const handleOpenTodo = (item: ITodo) => {
+    setOpenedTodo(item.id)
+
+    const data = {
+      name: item.name,
+      details: item.details,
+      done: item.done
+    }
+    setTempData(data)
+  }
+
+  const handleUpdateTodoName = (event: any) => {
+    const data = {
+      ...tempData,
+      name: event.target.value
+    }
+    setTempData(data)
+  }
+
+  const handleUpdateTodoDetails = (event: any) => {
+    const data = {
+      ...tempData,
+      details: event.target.value
+    }
+    setTempData(data)
+  }
+
+  const handleSaveTodo = (id: string, data: ITodoPayload) => {
+    handleUpdateTodo(id, data)
+
+    // reset temp data
+    setOpenedTodo('')
+    setTempData({
+      name: '',
+      done: false,
+      details: ''
+    })
+  }
+
+  // ----- handle delete todo -----
 
   const handleDeleteTodo = (id: string) => {
     dispatch(deleteTodo(id))
@@ -90,7 +137,7 @@ const Home = () => {
 
   // ----- handle logout -----
 
-  const onLogout = async () => {
+  const onLogout = () => {
     dispatch(logout())
     toast.success(`See you..`)
     router.replace('/login')
@@ -128,6 +175,79 @@ const Home = () => {
           </p>
 
           <div id="tasks" className="my-8" data-testid={todoItemWrapperTestid}>
+            {todos.map((item: ITodo) => {
+              const isOpen = openedTodo === item.id
+              return (
+                <div
+                  className={`
+                    flex justify-between border-b border-slate-200 py-3 px-3 gap-2 bg-gradient-to-r from-transparent to-transparent hover:from-slate-100 transition-all duration-150
+                    ${isOpen ? 'bg-slate-100 border-x-0 border-t-0' : 'cursor-pointer'}
+                  `}
+                  key={item.id}
+                >
+                  <div className="flex-none leading-none">
+                    <button
+                      className={`w-6 h-6 hover:text-indigo-600 hover:cursor-pointer text-slate-700`}
+                      onClick={() => handleToggleCheckbox(item)}
+                      data-testid={todoButtonUpdateTestid}
+                    >
+                      {item.done ? <FiCheckSquare size={20} /> : <FiSquare size={20} />}
+                    </button>
+                  </div>
+                  <div className="flex-grow max-w-full">
+                    <div className="w-full leading-none mt-0.5">
+                      <div
+                        onClick={() => handleOpenTodo(item)}
+                        className={`leading-none truncate w-full
+                          ${item.done ? 'text-slate-400 line-through' : ''}
+                          ${!isOpen ? 'visible' : 'hidden'}
+                        `}
+                      >
+                        {item.name}
+                      </div>
+                      <input
+                        type="text"
+                        className={`w-full bg-transparent text-slate-700 leading-none focus:outline-none mb-2
+                          ${isOpen ? 'visible' : 'hidden'}
+                        `}
+                        value={isOpen ? tempData.name : item.name}
+                        onChange={handleUpdateTodoName}
+                        id={item.id}
+                        placeholder="Todo name..."
+                      />
+                    </div>
+                    <div className={`w-full transition-all ${isOpen ? 'h-16' : 'h-0'}`}>
+                      <textarea
+                        className={`w-full bg-transparent text-slate-700 leading-tight focus:outline-none
+                          ${isOpen ? 'visible' : 'hidden'}
+                        `}
+                        rows={5}
+                        value={isOpen ? tempData.details : item.details}
+                        onChange={handleUpdateTodoDetails}
+                        placeholder="Details..."
+                      ></textarea>
+                    </div>
+                    <div className={`w-full flex gap-1 justify-end ${isOpen ? 'visible' : 'hidden'}`}>
+                      <button
+                        className="w-6 h-6 text-slate-700 hover:text-red-600"
+                        onClick={() => handleDeleteTodo(item.id)}
+                        data-testid={todoButtonRemoveTestid}
+                      >
+                        <FiTrash2 size={20} />
+                      </button>
+                      <button
+                        className="w-6 h-6 text-slate-700 hover:text-indigo-600"
+                        onClick={() => handleSaveTodo(item.id, tempData)}
+                        data-testid={todoButtonUpdateTestid}
+                      >
+                        <FiSave size={20} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+
             <div
               id="task"
               className="flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5"
@@ -139,7 +259,7 @@ const Home = () => {
                   onChange={handleOnChangeNewTodo}
                   onKeyDown={handleKeyDownNewTodo}
                   className="outline-none w-full border-slate-200"
-                  placeholder="Add item here..."
+                  placeholder="Add new item here..."
                   data-testid={todoInputTestid}
                 />
               </div>
@@ -153,49 +273,6 @@ const Home = () => {
                 <FiPlus size={20} />
               </button>
             </div>
-
-            {todos.map((item: ITodo) => {
-              return (
-                <div
-                  key={item.id}
-                  id="task"
-                  className={`flex justify-between items-center border-b border-slate-200 py-3 px-2 border-l-4  border-l-transparent gap-5 ${
-                    !item.done &&
-                    'bg-gradient-to-r from-transparent to-transparent hover:from-slate-100 transition ease-linear duration-150'
-                  }`}
-                  data-testid={todoItemTestid}
-                >
-                  <div className="inline-flex items-center space-x-2 align-middle">
-                    {item.done ? (
-                      <div className="w-6 h-6 text-slate-500">
-                        <FiCheck size={20} />
-                      </div>
-                    ) : (
-                      <button
-                        className="w-6 h-6 text-slate-500 hover:text-indigo-600 hover:cursor-pointer"
-                        onClick={() => {
-                          handleUpdateTodo(item.id, item)
-                        }}
-                        data-testid={todoButtonUpdateTestid}
-                      >
-                        <FiCheckCircle size={20} />
-                      </button>
-                    )}
-
-                    <div className={item.done ? 'text-slate-500 line-through' : ''}>{item.name}</div>
-                  </div>
-                  <button
-                    className="w-6 h-6 text-slate-500 hover:text-red-600"
-                    onClick={() => {
-                      handleDeleteTodo(item.id)
-                    }}
-                    data-testid={todoButtonRemoveTestid}
-                  >
-                    <FiTrash2 size={20} />
-                  </button>
-                </div>
-              )
-            })}
           </div>
           <p className="text-xs text-slate-500 text-center">
             Already done with your things?{' '}
