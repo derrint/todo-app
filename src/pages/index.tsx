@@ -10,7 +10,7 @@ import Cookies from 'js-cookie'
 import { addTodo, getTodos, deleteTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo, ITodoPayload } from '@/interfaces/todo'
 import { logout } from '@/store/actions/auth'
-import { useGetTodosQuery } from '@/api/todo'
+import { useGetTodosQuery, useAddTodoMutation } from '@/api/todo'
 
 export const pageTitleTestid = 'page-title'
 export const pageSubtitleTestid = 'page-subtitle'
@@ -35,27 +35,29 @@ const Home = () => {
     details: ''
   })
 
+  // ----- hooks initialization -----
+  const { data: todos, isLoading, isSuccess, isError, error } = useGetTodosQuery('')
+  const [addTodo] = useAddTodoMutation()
+
   // ----- handle get todo -----
 
-  const { data: todos, isLoading, isSuccess, isError, error } = useGetTodosQuery('')
-
-  console.log({ todos, isLoading, isSuccess, isError, error })
+  // console.log({ todos, isLoading, isSuccess, isError, error })
 
   // ----- handle add todo -----
 
-  const onAddTodo = (todo: string) => {
+  const onAddTodo = async (todo: string) => {
     const newTodoData: ITodoPayload = {
       name: todo,
       done: false,
       details: ''
     }
 
-    if (newTodo) {
-      dispatch(addTodo(newTodoData)).catch((error: any) => {
-        toast.error(error.message)
-      })
-      setNewTodo('')
+    const result = await addTodo(newTodoData)
+    if ('error' in result && result.error) {
+      toast.error((result.error as Error).message)
     }
+
+    setNewTodo('')
   }
 
   const handleOnChangeNewTodo = (event: any) => {

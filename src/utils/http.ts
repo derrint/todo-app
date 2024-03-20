@@ -38,7 +38,7 @@ http.interceptors.response.use(
           window.location.href = '/login'
         }, 3000)
       }
-      throw new Error(response.data.error_message)
+      throw new Error(message)
     }
 
     return response
@@ -76,8 +76,7 @@ export const axiosBaseQuery =
       const err = axiosError as AxiosError
       return {
         error: {
-          status: err.response?.status,
-          data: err.response?.data || err.message
+          message: err.message
         }
       }
     }

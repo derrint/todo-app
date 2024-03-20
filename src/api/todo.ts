@@ -13,10 +13,10 @@ const todoApi = createApi({
       providesTags: ['Todos']
     }),
     addTodo: builder.mutation({
-      query: (todo) => ({
+      query: (data) => ({
         url: '/todo',
         method: 'POST',
-        body: todo
+        data
       }),
       invalidatesTags: ['Todos']
     }),
