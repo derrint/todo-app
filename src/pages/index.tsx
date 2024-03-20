@@ -10,7 +10,7 @@ import Cookies from 'js-cookie'
 import { addTodo, getTodos, deleteTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo, ITodoPayload } from '@/interfaces/todo'
 import { logout } from '@/store/actions/auth'
-import { useGetTodosQuery, useAddTodoMutation, useUpdateTodoMutation } from '@/api/todo'
+import { useGetTodosQuery, useAddTodoMutation, useUpdateTodoMutation, useDeleteTodoMutation } from '@/api/todo'
 
 export const pageTitleTestid = 'page-title'
 export const pageSubtitleTestid = 'page-subtitle'
@@ -39,6 +39,7 @@ const Home = () => {
   const { data: todos, isLoading, isSuccess, isError, error } = useGetTodosQuery('')
   const [addTodo] = useAddTodoMutation()
   const [updateTodo] = useUpdateTodoMutation()
+  const [deleteTodo] = useDeleteTodoMutation()
 
   // ----- handle get todo -----
 
@@ -132,10 +133,11 @@ const Home = () => {
 
   // ----- handle delete todo -----
 
-  const handleDeleteTodo = (id: string) => {
-    dispatch(deleteTodo(id)).catch((error: any) => {
-      toast.error(error.message)
-    })
+  const handleDeleteTodo = async (id: string) => {
+    const result = await deleteTodo(id)
+    if ('error' in result && result.error) {
+      toast.error((result.error as Error).message)
+    }
   }
 
   // ----- handle logout -----

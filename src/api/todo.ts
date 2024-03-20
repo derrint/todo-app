@@ -30,10 +30,9 @@ const todoApi = createApi({
       invalidatesTags: ['Todos']
     }),
     deleteTodo: builder.mutation({
-      query: ({ id }) => ({
+      query: (id) => ({
         url: `/todo/${id}`,
-        method: 'DELETE',
-        body: id
+        method: 'DELETE'
       }),
       invalidatesTags: ['Todos']
     })
