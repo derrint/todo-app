@@ -3,10 +3,10 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiLogIn } from 'react-icons/fi'
-import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
+import Cookies from 'js-cookie'
 
-import { login } from '@/store/actions/auth'
+import { useLoginMutation } from '@/api/auth'
 
 export const pageTitleTestid = 'page-title'
 export const pageSubtitleTestid = 'page-subtitle'
@@ -14,11 +14,17 @@ export const loginButtonTestid = 'login-button'
 export const usernameInputTestid = 'username-input'
 export const passwordInputTestid = 'password-input'
 
+interface ILoginForm {
+  username: string
+  password: string
+}
+
 const Login = () => {
   const router = useRouter()
-  const dispatch = useDispatch()
 
-  const initialForm = {
+  const [login] = useLoginMutation()
+
+  const initialForm: ILoginForm = {
     username: '',
     password: ''
   }
@@ -40,10 +46,18 @@ const Login = () => {
 
   // ----- handle login -----
 
-  const onLogin = async (data: any) => {
-    if (data.username && data.password) {
+  const onLogin = async (payload: ILoginForm) => {
+    const { username, password } = payload
+    if (username && password) {
       try {
-        const { firstName } = await dispatch(login(data))
+        const res: any = await login(payload)
+        const token = res.data.data
+
+        const cookiesData = JSON.stringify({ token, username })
+        Cookies.set('_derrint_todo_app', cookiesData, { expires: 7 })
+
+        const firstName = 'Derrint'
+
         toast.success(`Welcome back, ${firstName}`)
         setForm(initialForm)
         router.replace('/')
