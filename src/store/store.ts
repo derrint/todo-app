@@ -1,14 +1,16 @@
-import { legacy_createStore as createStore, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
-import { composeWithDevTools } from 'redux-devtools-extension'
+import { setupListeners } from '@reduxjs/toolkit/query'
+import { configureStore } from '@reduxjs/toolkit'
 
-import rootReducer from './reducers'
-// import logger from "redux-logger";
+import todoApi from '@/api/todo'
+import authApi from '@/api/auth'
 
-const initalState = {}
-
-const middleware = [thunk]
-// middleware.push(logger);
-const store = createStore(rootReducer, initalState, composeWithDevTools(applyMiddleware(...middleware)))
+export const store = configureStore({
+  reducer: {
+    [todoApi.reducerPath]: todoApi.reducer,
+    [authApi.reducerPath]: authApi.reducer
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(todoApi.middleware).concat(authApi.middleware)
+})
+setupListeners(store.dispatch)
 
 export default store
