@@ -10,7 +10,7 @@ import Cookies from 'js-cookie'
 import { addTodo, getTodos, deleteTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo, ITodoPayload } from '@/interfaces/todo'
 import { logout } from '@/store/actions/auth'
-import { useGetTodosQuery, useAddTodoMutation } from '@/api/todo'
+import { useGetTodosQuery, useAddTodoMutation, useUpdateTodoMutation } from '@/api/todo'
 
 export const pageTitleTestid = 'page-title'
 export const pageSubtitleTestid = 'page-subtitle'
@@ -38,6 +38,7 @@ const Home = () => {
   // ----- hooks initialization -----
   const { data: todos, isLoading, isSuccess, isError, error } = useGetTodosQuery('')
   const [addTodo] = useAddTodoMutation()
+  const [updateTodo] = useUpdateTodoMutation()
 
   // ----- handle get todo -----
 
@@ -72,10 +73,13 @@ const Home = () => {
 
   // ----- handle update todo -----
 
-  const handleUpdateTodo = (id: string, data: ITodoPayload) => {
-    dispatch(updateTodo(id, data)).catch((error: any) => {
-      toast.error(error.message)
-    })
+  const handleUpdateTodo = async (id: string, data: ITodoPayload) => {
+    const result = await updateTodo({ id, data })
+    if ('error' in result && result.error) {
+      toast.error((result.error as Error).message)
+      return false
+    }
+    return true
   }
 
   const handleToggleCheckbox = (item: ITodo) => {
@@ -113,16 +117,17 @@ const Home = () => {
     setTempData(data)
   }
 
-  const handleSaveTodo = (id: string, data: ITodoPayload) => {
-    handleUpdateTodo(id, data)
-
-    // reset temp data
-    setOpenedTodo('')
-    setTempData({
-      name: '',
-      done: false,
-      details: ''
-    })
+  const handleSaveTodo = async (id: string, data: ITodoPayload) => {
+    const isSuccess = await handleUpdateTodo(id, data)
+    if (isSuccess) {
+      // reset temp data
+      setOpenedTodo('')
+      setTempData({
+        name: '',
+        done: false,
+        details: ''
+      })
+    }
   }
 
   // ----- handle delete todo -----

@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 
 import { axiosBaseQuery } from '@/utils/http'
+import { ITodoPayload } from '@/interfaces/todo'
 
 const todoApi = createApi({
   reducerPath: 'todoApi',
@@ -13,18 +14,18 @@ const todoApi = createApi({
       providesTags: ['Todos']
     }),
     addTodo: builder.mutation({
-      query: (data) => ({
+      query: (payload: ITodoPayload) => ({
         url: '/todo',
         method: 'POST',
-        data
+        data: payload
       }),
       invalidatesTags: ['Todos']
     }),
     updateTodo: builder.mutation({
-      query: (todo) => ({
-        url: `/todo/${todo.id}`,
+      query: (payload) => ({
+        url: `/todo/${payload.id}`,
         method: 'PUT',
-        body: todo
+        data: payload.data
       }),
       invalidatesTags: ['Todos']
     }),
