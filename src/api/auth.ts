@@ -4,7 +4,7 @@ import { axiosBaseQuery } from '@/utils/http'
 
 const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: axiosBaseQuery({ baseUrl: 'http://localhost:3000/api' }),
+  baseQuery: axiosBaseQuery(),
   tagTypes: ['Auth'],
   endpoints: (builder) => ({
     login: builder.mutation({

@@ -4,7 +4,7 @@ import { axiosBaseQuery } from '@/utils/http'
 
 const todoApi = createApi({
   reducerPath: 'todoApi',
-  baseQuery: axiosBaseQuery({ baseUrl: 'http://localhost:3000/api' }),
+  baseQuery: axiosBaseQuery(),
   tagTypes: ['Todos'],
   endpoints: (builder) => ({
     getTodos: builder.query({
