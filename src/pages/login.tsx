@@ -4,9 +4,9 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiLogIn } from 'react-icons/fi'
 import { toast } from 'react-toastify'
-import Cookies from 'js-cookie'
 
 import { useLoginMutation } from '@/api/auth'
+import { setToken } from '@/utils/helper'
 
 export const pageTitleTestid = 'page-title'
 export const pageSubtitleTestid = 'page-subtitle'
@@ -53,12 +53,9 @@ const Login = () => {
         const res: any = await login(payload)
         const token = res.data.data
 
-        const cookiesData = JSON.stringify({ token, username })
-        Cookies.set('_derrint_todo_app', cookiesData, { expires: 7 })
+        setToken(token, username)
 
-        const firstName = 'Derrint'
-
-        toast.success(`Welcome back, ${firstName}`)
+        toast.success(`Welcome back, ${username}`)
         setForm(initialForm)
         router.replace('/')
       } catch (error: any) {

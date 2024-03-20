@@ -1,14 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 
-import { loadApp } from '@/store/actions/auth'
+import { getToken } from '@/utils/helper'
 
 const ProtectRoute = ({ children }: any) => {
   const router = useRouter()
-  const dispatch = useDispatch()
 
   const authRoute = (isSignedIn: boolean, paths: string[]) => {
     // ----- prevent routing for some cases -----
@@ -25,7 +23,12 @@ const ProtectRoute = ({ children }: any) => {
   const protectedRoutes = ['/']
 
   const handleOnLoad = async () => {
-    const { isSignedIn } = await dispatch(loadApp())
+    let isSignedIn = false
+    const token = getToken()
+
+    if (token != null) {
+      isSignedIn = true
+    }
     authRoute(isSignedIn, protectedRoutes)
   }
 

@@ -3,14 +3,11 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { FiPlus, FiTrash2, FiSquare, FiCheckSquare, FiSave } from 'react-icons/fi'
-import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import Cookies from 'js-cookie'
 
-import { addTodo, getTodos, deleteTodo, updateTodo } from '@/store/actions/todo'
 import { ITodo, ITodoPayload } from '@/interfaces/todo'
-import { logout } from '@/store/actions/auth'
 import { useGetTodosQuery, useAddTodoMutation, useUpdateTodoMutation, useDeleteTodoMutation } from '@/api/todo'
+import { removeToken } from '@/utils/helper'
 
 export const pageTitleTestid = 'page-title'
 export const pageSubtitleTestid = 'page-subtitle'
@@ -25,7 +22,6 @@ export const logoutButtonTestid = 'logout-button'
 
 const Home = () => {
   const router = useRouter()
-  const dispatch = useDispatch()
 
   const [newTodo, setNewTodo] = useState('')
   const [openedTodo, setOpenedTodo] = useState('')
@@ -36,14 +32,23 @@ const Home = () => {
   })
 
   // ----- hooks initialization -----
-  const { data: todos, isLoading, isSuccess, isError, error } = useGetTodosQuery('')
+  const { data: todos, isError, error, status } = useGetTodosQuery('')
   const [addTodo] = useAddTodoMutation()
   const [updateTodo] = useUpdateTodoMutation()
   const [deleteTodo] = useDeleteTodoMutation()
 
   // ----- handle get todo -----
 
-  // console.log({ todos, isLoading, isSuccess, isError, error })
+  useEffect(() => {
+    if (isError) {
+      const { message } = error as Error
+      toast.error(message)
+
+      if (message.includes('invalid token')) {
+        router.replace('/login')
+      }
+    }
+  }, [status])
 
   // ----- handle add todo -----
 
@@ -143,9 +148,7 @@ const Home = () => {
   // ----- handle logout -----
 
   const onLogout = () => {
-    dispatch(logout()).catch((error: any) => {
-      toast.error(error.message)
-    })
+    removeToken()
     toast.success(`See you..`)
     router.replace('/login')
   }

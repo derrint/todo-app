@@ -1,7 +1,7 @@
 import axios from 'axios'
-import Cookies from 'js-cookie'
 import type { BaseQueryFn } from '@reduxjs/toolkit/query'
 import type { AxiosRequestConfig, AxiosError } from 'axios'
+import { removeToken, getToken } from './helper'
 
 const http = axios.create({
   baseURL: 'http://localhost:3000/api',
@@ -12,9 +12,7 @@ const http = axios.create({
 
 http.interceptors.request.use(
   async (config: any) => {
-    const userDataJSON = Cookies.get('_derrint_todo_app')
-    const user = userDataJSON ? JSON.parse(userDataJSON) : {}
-    const token = user.token ?? null
+    const token = getToken()
 
     if (token != null) {
       config.headers.Authorization = `Bearer ${token}`
@@ -32,11 +30,8 @@ http.interceptors.response.use(
     const message = response.data.error_message
     if (status === 'error') {
       if (message.includes('invalid token')) {
-        // remove & redirect to login page
-        Cookies.remove('_derrint_todo_app')
-        setTimeout(() => {
-          window.location.href = '/login'
-        }, 3000)
+        // remove token
+        removeToken()
       }
       throw new Error(message)
     }
