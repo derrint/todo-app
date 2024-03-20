@@ -50,8 +50,11 @@ const Login = () => {
     const { username, password } = payload
     if (username && password) {
       try {
-        const res: any = await login(payload)
-        const token = res.data.data
+        const result: any = await login(payload)
+        if ('error' in result && result.error) {
+          throw new Error(result.error.message)
+        }
+        const token = result.data.data
 
         setToken(token, username)
 
