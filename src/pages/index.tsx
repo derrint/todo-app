@@ -247,7 +247,7 @@ const Home = () => {
                         </button>
                         <button
                           className="w-6 h-6 text-slate-700 hover:text-indigo-600"
-                          onClick={() => handleSaveTodo(item.id, tempData)}
+                          onClick={() => handleSaveTodo(item.id, { ...tempData, done: item.done })}
                           data-testid={todoButtonUpdateTestid}
                         >
                           <FiSave size={20} />
