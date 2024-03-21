@@ -215,7 +215,7 @@ const Home = () => {
                         </div>
                         <input
                           type="text"
-                          className={`w-full bg-transparent text-slate-700 leading-none focus:outline-none mb-2
+                          className={`w-full bg-transparent text-slate-700 leading-none focus:outline-none mb-2 font-bold
                             ${isOpen ? 'visible' : 'hidden'}
                           `}
                           value={isOpen ? tempData.name : item.name}
