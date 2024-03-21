@@ -1,6 +1,11 @@
 import { rest } from 'msw'
 
-const initialData = {
+const authData = {
+  string: 'ok',
+  data: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMTdjZTkzLTRjODUtNDEzZi1iMjliLTc5ZmNhZWQyMzBiYiIsInVzZXJuYW1lIjoia2FuZ2Fyb29oZWFsdGgifQ.3bUKzWbXX5J6xt6wXQlslh0qzyom3-xewNB89P1T80Q'
+}
+
+const todoData = {
   data: [
     {
       id: '28',
@@ -56,16 +61,19 @@ const initialData = {
 }
 
 export const handlers = [
+  rest.post('http://localhost:3000/api/login', (_req, res, ctx) => {
+    return res(ctx.json(authData))
+  }),
   rest.get('http://localhost:3000/api/todo', (_req, res, ctx) => {
-    return res(ctx.json(initialData))
+    return res(ctx.json(todoData))
   }),
   rest.post('http://localhost:3000/api/todo', (_req, res, ctx) => {
-    return res(ctx.json(initialData))
+    return res(ctx.json(todoData))
   }),
   rest.put('http://localhost:3000/api/todo/:id', (_req, res, ctx) => {
-    return res(ctx.json(initialData))
+    return res(ctx.json(todoData))
   }),
   rest.delete('http://localhost:3000/todo/:id', (_req, res, ctx) => {
-    return res(ctx.json(initialData))
+    return res(ctx.json(todoData))
   })
 ]
