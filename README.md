@@ -1,4 +1,4 @@
-This is a Todo App, created using [Next.js](https://nextjs.org/), combined with [Redux](https://redux.js.org/).
+This is a Todo App, created using [Next.js](https://nextjs.org/), combined with [Redux](https://redux.js.org/), alongside with [RTK Query](https://redux-toolkit.js.org/rtk-query/overview).
 
 ## Start on your local machine
 
@@ -29,3 +29,8 @@ For testing purposes, you may use these credentials
 
 - Username : `kangaroohealth`
 - Password : `the magnificent chicken`
+
+## Video Preview
+
+https://github.com/derrint/todo-app/assets/39628476/583f75c9-38ee-4b0e-a8e8-2b7787f02341
+
