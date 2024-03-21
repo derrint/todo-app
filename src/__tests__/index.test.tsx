@@ -1,112 +1,50 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { Provider, useDispatch, useSelector } from 'react-redux'
-import thunk from 'redux-thunk'
+import { Provider } from 'react-redux'
 
-import configureMockStore from 'redux-mock-store'
-
+import store from '@/store/store'
 import Home, {
   logoutButtonTestid,
   pageSubtitleTestid,
   pageTitleTestid,
-  resetButtonTestid,
   todoButtonAddTestid,
-  todoButtonRemoveTestid,
+  todoButtonDeleteTestid,
   todoButtonUpdateTestid,
+  todoCheckboxTestid,
   todoInputTestid,
+  todoItemDetailsInputTestid,
+  todoItemNameInputTestid,
+  todoItemNameTestid,
   todoItemTestid
 } from '@/pages/index'
+import { server } from '@/mock/api/server'
+import todoApi from '@/api/todo'
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn()
 }))
 
-const middlewares = [thunk]
-const mockStore = configureMockStore(middlewares)
-
-const initialState = {
-  todos: [
-    {
-      id: 28,
-      todo: 'Go to the gym',
-      completed: false,
-      userId: 15
-    },
-    {
-      id: 30,
-      todo: 'Take cat on a walk',
-      completed: false,
-      userId: 15
-    },
-    {
-      id: 42,
-      todo: 'Wash car',
-      completed: false,
-      userId: 15
-    },
-    {
-      id: 56,
-      todo: 'Go on a fishing trip with some friends',
-      completed: false,
-      userId: 15
-    },
-    {
-      id: 91,
-      todo: 'Prepare a 72-hour kit',
-      completed: true,
-      userId: 15
-    },
-    {
-      id: 126,
-      todo: 'Take a bubble bath',
-      completed: true,
-      userId: 15
-    },
-    {
-      id: 128,
-      todo: 'Paint the first thing I see',
-      completed: false,
-      userId: 15
-    }
-  ],
-  auth: {
-    isSignedIn: true,
-    user: {
-      id: 15,
-      username: 'kminchelle',
-      email: 'kminchelle@qq.com',
-      firstName: 'Jeanne',
-      lastName: 'Halvorson',
-      gender: 'female',
-      image: 'https://robohash.org/autquiaut.png',
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInVzZXJuYW1lIjoia21pbmNoZWxsZSIsImVtYWlsIjoia21pbmNoZWxsZUBxcS5jb20iLCJmaXJzdE5hbWUiOiJKZWFubmUiLCJsYXN0TmFtZSI6IkhhbHZvcnNvbiIsImdlbmRlciI6ImZlbWFsZSIsImltYWdlIjoiaHR0cHM6Ly9yb2JvaGFzaC5vcmcvYXV0cXVpYXV0LnBuZyIsImlhdCI6MTY4OTMxMTM4OSwiZXhwIjoxNjg5MzE0OTg5fQ.uIiohrGDwGa2Zufij_Zq7Wwe_spDm6F-PmhhOiAMReI'
-    }
-  }
-}
-const updatedStore = mockStore(() => initialState)
-
-beforeEach(() => {
-  // ! WE MAKE SURE THE MOCKS ARE CLEARED BEFORE EACH TEST CASE
-  useSelectorMock.mockClear()
-  useDispatchMock.mockClear()
+// Establish API mocking before all tests.
+beforeAll(() => {
+  server.listen()
 })
 
-afterAll(() => {
-  cleanup()
+// Reset any request handlers that we may add during the tests,
+// so they don't affect other tests.
+afterEach(() => {
+  server.resetHandlers()
+  // This is the solution to clear RTK Query cache after each test
+  store.dispatch(todoApi.util.resetApiState())
 })
 
-// ! SETUP THE SPY ON USESELECTOR / USE DISPATCH
-// ! WE DO THIS TO BE ABLE TO CHECK IF THE DISPATCH MOCK GOT CALLED AND HOW MANY TIMES
-const reactRedux = { useDispatch, useSelector }
-const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch')
-const useSelectorMock = jest.spyOn(reactRedux, 'useSelector')
+// Clean up after the tests are finished.
+afterAll(() => server.close())
 
 describe('Home page', () => {
   const customRender = () => {
     render(
-      <Provider store={updatedStore}>
+      <Provider store={store}>
         <Home />
       </Provider>
     )
@@ -125,11 +63,13 @@ describe('Home page', () => {
       expect(subtitle).toHaveTextContent('here are your latest tasks.')
     })
 
-    it('should render todo items correctly', () => {
+    it('should render todo items correctly', async () => {
       customRender()
 
-      const todoItems = screen.getAllByTestId(todoItemTestid)
-      expect(todoItems).toHaveLength(7)
+      await waitFor(() => {
+        const todoItems = screen.getAllByTestId(todoItemTestid)
+        expect(todoItems).toHaveLength(7)
+      })
     })
 
     it('should be able to add new todo', async () => {
@@ -142,46 +82,84 @@ describe('Home page', () => {
       expect(todoInput).toHaveValue('Pick-up laundry')
 
       fireEvent.click(todoButtonAdd)
-      expect(todoInput).toHaveValue('')
+      await waitFor(() => {
+        expect(todoInput).toHaveValue('')
+      })
 
       fireEvent.change(todoInput, { target: { value: 'Make-up bed' } })
       expect(todoInput).toHaveValue('Make-up bed')
 
       fireEvent.keyDown(todoInput, { key: 'Enter', code: 13, charCode: 13 })
-      expect(todoInput).toHaveValue('')
+      await waitFor(() => {
+        expect(todoInput).toHaveValue('')
+      })
 
       const todoItems = screen.getAllByTestId(todoItemTestid)
       expect(todoItems).toHaveLength(7)
     })
 
-    it('should be able to update todo', async () => {
+    it('should be able to check todo', async () => {
       customRender()
 
-      const incompleteTodoItems = screen.getAllByTestId(todoButtonUpdateTestid)
-      expect(incompleteTodoItems).toHaveLength(5)
+      await waitFor(async () => {
+        const todoItems = screen.getAllByTestId(todoCheckboxTestid)
+        expect(todoItems).toHaveLength(7)
+        expect(todoItems[0]).toHaveClass('is-unchecked')
 
-      fireEvent.click(incompleteTodoItems[0])
-      const newIncompleteTodoItems = screen.getAllByTestId(todoButtonUpdateTestid)
-      expect(newIncompleteTodoItems).toHaveLength(5)
+        fireEvent.click(todoItems[0])
+
+        expect(todoItems[0]).toHaveClass('is-unchecked')
+      })
+    })
+
+    it('should be able to open todo details', async () => {
+      customRender()
+
+      await waitFor(async () => {
+        const todoItems = screen.getAllByTestId(todoItemNameTestid)
+        expect(todoItems).toHaveLength(7)
+        expect(todoItems[0]).toHaveClass('visible')
+
+        fireEvent.click(todoItems[0])
+
+        expect(todoItems[0]).toHaveClass('hidden')
+      })
+    })
+
+    it('should be able to save updated todo', async () => {
+      customRender()
+
+      await waitFor(async () => {
+        const todoItems = screen.getAllByTestId(todoButtonUpdateTestid)
+        expect(todoItems).toHaveLength(7)
+
+        const todoItemNameInputs = screen.getAllByTestId(todoItemNameInputTestid)
+        fireEvent.change(todoItemNameInputs[0], { target: { value: 'Open the bottle' } })
+        expect(todoItemNameInputs[0]).toHaveValue('Go to the gym')
+
+        const todoItemDetailsInputs = screen.getAllByTestId(todoItemDetailsInputTestid)
+        fireEvent.change(todoItemDetailsInputs[0], { target: { value: 'Please open it slowly' } })
+        expect(todoItemDetailsInputs[0]).toHaveValue(`Don't forget to bring a towel`)
+
+        fireEvent.click(todoItems[0])
+
+        const newTodoItems = screen.getAllByTestId(todoButtonUpdateTestid)
+        expect(newTodoItems).toHaveLength(7)
+      })
     })
 
     it('should be able to delete todo', async () => {
       customRender()
 
-      const removableTodoItems = screen.getAllByTestId(todoButtonRemoveTestid)
-      expect(removableTodoItems).toHaveLength(7)
+      await waitFor(async () => {
+        const removableTodoItems = screen.getAllByTestId(todoButtonDeleteTestid)
+        expect(removableTodoItems).toHaveLength(7)
 
-      fireEvent.click(removableTodoItems[2])
-      const newRemovableTodoItems = screen.getAllByTestId(todoButtonRemoveTestid)
-      expect(newRemovableTodoItems).toHaveLength(7)
-    })
+        fireEvent.click(removableTodoItems[2])
 
-    it('should be able to reset todo', async () => {
-      customRender()
-
-      const resetButton = screen.getByTestId(resetButtonTestid)
-      fireEvent.click(resetButton)
-      expect(resetButton).toBeInTheDocument()
+        const newRemovableTodoItems = screen.getAllByTestId(todoButtonDeleteTestid)
+        expect(newRemovableTodoItems).toHaveLength(7)
+      })
     })
 
     it('should be able to logout', async () => {

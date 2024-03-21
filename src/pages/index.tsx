@@ -13,11 +13,14 @@ export const pageTitleTestid = 'page-title'
 export const pageSubtitleTestid = 'page-subtitle'
 export const todoItemWrapperTestid = 'todo-item-wrapper'
 export const todoItemTestid = 'todo-item'
+export const todoItemNameTestid = 'todo-item-name'
+export const todoItemNameInputTestid = 'todo-item-name-input'
+export const todoItemDetailsInputTestid = 'todo-item-details-input'
 export const todoInputTestid = 'todo-input'
 export const todoButtonAddTestid = 'todo-button-add'
+export const todoCheckboxTestid = 'todo-checkbox'
 export const todoButtonUpdateTestid = 'todo-button-update'
-export const todoButtonRemoveTestid = 'todo-button-remove'
-export const resetButtonTestid = 'reset-button'
+export const todoButtonDeleteTestid = 'todo-button-delete'
 export const logoutButtonTestid = 'logout-button'
 
 const Home = () => {
@@ -185,12 +188,15 @@ const Home = () => {
                       ${isOpen ? 'bg-slate-100 border-x-0 border-t-0' : 'cursor-pointer'}
                     `}
                     key={item.id}
+                    data-testid={todoItemTestid}
                   >
                     <div className="flex-none leading-none">
                       <button
-                        className={`w-6 h-6 hover:text-indigo-600 hover:cursor-pointer text-slate-700`}
+                        className={`w-6 h-6 hover:text-indigo-600 hover:cursor-pointer text-slate-700
+                          ${item.done ? 'is-checked' : 'is-unchecked'}
+                        `}
                         onClick={() => handleToggleCheckbox(item)}
-                        data-testid={todoButtonUpdateTestid}
+                        data-testid={todoCheckboxTestid}
                       >
                         {item.done ? <FiCheckSquare size={20} /> : <FiSquare size={20} />}
                       </button>
@@ -203,6 +209,7 @@ const Home = () => {
                             ${item.done ? 'text-slate-400 line-through' : ''}
                             ${!isOpen ? 'visible' : 'hidden'}
                           `}
+                          data-testid={todoItemNameTestid}
                         >
                           {item.name}
                         </div>
@@ -215,6 +222,7 @@ const Home = () => {
                           onChange={handleUpdateTodoName}
                           id={item.id}
                           placeholder="Todo name..."
+                          data-testid={todoItemNameInputTestid}
                         />
                       </div>
                       <div className={`w-full transition-all ${isOpen ? 'h-16' : 'h-0'}`}>
@@ -226,13 +234,14 @@ const Home = () => {
                           value={isOpen ? tempData.details : item.details}
                           onChange={handleUpdateTodoDetails}
                           placeholder="Details..."
+                          data-testid={todoItemDetailsInputTestid}
                         ></textarea>
                       </div>
                       <div className={`w-full flex gap-1 justify-end ${isOpen ? 'visible' : 'hidden'}`}>
                         <button
                           className="w-6 h-6 text-slate-700 hover:text-red-600"
                           onClick={() => handleDeleteTodo(item.id)}
-                          data-testid={todoButtonRemoveTestid}
+                          data-testid={todoButtonDeleteTestid}
                         >
                           <FiTrash2 size={20} />
                         </button>
