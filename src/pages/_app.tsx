@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default */
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import { ToastContainer } from 'react-toastify'

@@ -3,10 +3,10 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiLogIn } from 'react-icons/fi'
-import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 
-import { login } from '@/store/actions/auth'
+import { useLoginMutation } from '@/api/auth'
+import { setToken } from '@/utils/helper'
 
 export const pageTitleTestid = 'page-title'
 export const pageSubtitleTestid = 'page-subtitle'
@@ -14,11 +14,17 @@ export const loginButtonTestid = 'login-button'
 export const usernameInputTestid = 'username-input'
 export const passwordInputTestid = 'password-input'
 
+interface ILoginForm {
+  username: string
+  password: string
+}
+
 const Login = () => {
   const router = useRouter()
-  const dispatch = useDispatch()
 
-  const initialForm = {
+  const [login] = useLoginMutation()
+
+  const initialForm: ILoginForm = {
     username: '',
     password: ''
   }
@@ -40,15 +46,23 @@ const Login = () => {
 
   // ----- handle login -----
 
-  const onLogin = async (data: any) => {
-    if (data.username && data.password) {
+  const onLogin = async (payload: ILoginForm) => {
+    const { username, password } = payload
+    if (username && password) {
       try {
-        const { firstName } = await dispatch(login(data))
-        toast.success(`Welcome back, ${firstName}`)
+        const result: any = await login(payload)
+        if ('error' in result && result.error) {
+          throw new Error(result.error.message)
+        }
+        const token = result.data.data
+
+        setToken(token, username)
+
+        toast.success(`Welcome back, ${username}`)
         setForm(initialForm)
         router.replace('/')
       } catch (error: any) {
-        toast.error(error.response.data.message)
+        toast.error(error.message)
       }
     }
   }
